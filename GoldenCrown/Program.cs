@@ -1,5 +1,5 @@
-using GoldenCrown.Database;
 using Microsoft.EntityFrameworkCore;
+using GoldenCrown.Database;
 
 namespace GoldenCrown
 {
