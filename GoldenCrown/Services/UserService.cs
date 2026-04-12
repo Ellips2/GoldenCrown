@@ -9,13 +9,15 @@ namespace GoldenCrown.Services
     {
         private const int PASSWORD_MIN_LENGTH = 6;
         private readonly ApplicationDbContext _context;
+        private readonly IAccountService _accountService;
 
-        public UserService(ApplicationDbContext context)
+        public UserService(ApplicationDbContext context, IAccountService accountService)
         {
             _context = context;
+            _accountService = accountService;
         }
 
-        public async Task<bool> Register(string login, string name, string password)
+        public async Task<bool> RegisterAsync(string login, string name, string password)
         {
             var existing = await _context.Users.FirstOrDefaultAsync(x => x.Login == login);
             if (existing != null)
@@ -37,6 +39,8 @@ namespace GoldenCrown.Services
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+
+            await _accountService.CreateAccountAsync(login);
 
             return true;
         }

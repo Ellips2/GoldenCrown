@@ -2,6 +2,6 @@
 {
     public interface IUserService
     {
-        Task<bool> Register(string login, string name, string password);
+        Task<bool> RegisterAsync(string login, string name, string password);
     }
 }
