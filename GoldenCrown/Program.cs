@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using GoldenCrown.Database;
+using GoldenCrown.Services;
 
 namespace GoldenCrown
 {
@@ -14,6 +15,8 @@ namespace GoldenCrown
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found");
 
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionStrnig));
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
