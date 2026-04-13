@@ -8,7 +8,7 @@ namespace GoldenCrown.Services
     {
         private readonly ApplicationDbContext _context;
 
-        AccountService(ApplicationDbContext context)
+        public AccountService(ApplicationDbContext context)
         {
             _context = context;
         }

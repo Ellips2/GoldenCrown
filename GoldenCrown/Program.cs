@@ -19,6 +19,7 @@ namespace GoldenCrown
             builder.Services.AddScoped<IAccountService, AccountService>();
 
             builder.Services.AddControllers();
+            builder.Services.AddSwaggerGen();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
@@ -28,6 +29,8 @@ namespace GoldenCrown
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();

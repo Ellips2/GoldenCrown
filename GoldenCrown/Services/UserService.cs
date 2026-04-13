@@ -41,8 +41,6 @@ namespace GoldenCrown.Services
             await _context.SaveChangesAsync();
 
             await _accountService.CreateAccountAsync(login);
-            await _accountService.CreateAccountAsync(login);
-            await _accountService.CreateAccountAsync(login);
 
             return true;
         }
