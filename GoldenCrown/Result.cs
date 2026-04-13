@@ -17,5 +17,7 @@
         public static Result Success() => new Result { IsSuccess = true };
 
         public static Result Failure(string errorMessage) => new Result { IsSuccess = false, ErrorMessage = errorMessage };
+
+        public static implicit operator bool(Result result) => result.IsSuccess;
     }
 }

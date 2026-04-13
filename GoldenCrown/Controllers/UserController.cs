@@ -1,6 +1,7 @@
 ﻿using GoldenCrown.DTOs;
 using GoldenCrown.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoldenCrown.Controllers
@@ -32,16 +33,22 @@ namespace GoldenCrown.Controllers
             return BadRequest(new { Message = "User registration failed" });
         }
 
-        //[HttpGet("{userId}")]   //GET api/user/{userId}=123
-        //public Task<IActionResult> GetUserDetails([FromQuery] int userId, )
-        //{
-        //    var userDetails = new
-        //    {
-        //        UserId = userId,
-        //        Username = "SampleUser",
-        //        Email = ""
-        //    };
-        //    return Task.FromResult<IActionResult>(Ok(userDetails));
-        //}
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _userService.LoginAsync(request.Login, request.Password);
+            if (result)
+            {
+                return Ok( new { Token = result.Value });
+            }
+
+            return NotFound();
+
+        }
     }
 }
