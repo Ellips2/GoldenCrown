@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
 namespace GoldenCrown.DTOs.Finance
 {
     public class DepositRequest
     {
+        [FromQuery]
         [Required(ErrorMessage = "Field Token is Required")]
         public string Token { get; set; }
 
