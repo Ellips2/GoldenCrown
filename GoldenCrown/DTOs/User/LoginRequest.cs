@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GoldenCrown.DTOs
+namespace GoldenCrown.DTOs.User
 {
     public class LoginRequest
     {
