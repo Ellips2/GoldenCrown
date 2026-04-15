@@ -31,5 +31,16 @@ namespace GoldenCrown.Controllers
             
              return BadRequest(new { Message = balanceResult.ErrorMessage});
         }
+
+        [HttpPost("deposit")]
+        public async Task<IActionResult> DepositAsync([FromBody] DepositRequest request)
+        {
+            var depositeResult = await _financeService.DepositAsync(request.Token, request.Amount);
+            if (depositeResult.IsSuccess) 
+            {
+                return Ok();
+            }
+            return BadRequest(new {Message = depositeResult.ErrorMessage});
+        }
     }
 } 
