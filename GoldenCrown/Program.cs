@@ -17,6 +17,7 @@ namespace GoldenCrown
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionStrnig));
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IFinanceService, FinanceService>();
 
             builder.Services.AddControllers();
             builder.Services.AddSwaggerGen();
