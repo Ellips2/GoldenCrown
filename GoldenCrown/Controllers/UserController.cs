@@ -1,4 +1,5 @@
-﻿using GoldenCrown.DTOs.User;
+﻿using GoldenCrown.DTOs.Finance;
+using GoldenCrown.DTOs.User;
 using GoldenCrown.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -48,7 +49,6 @@ namespace GoldenCrown.Controllers
             }
 
             return NotFound();
-
         }
     }
 }
