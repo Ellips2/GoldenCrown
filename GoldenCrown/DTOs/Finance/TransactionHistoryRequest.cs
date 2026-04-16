@@ -14,9 +14,9 @@ namespace GoldenCrown.DTOs.Finance
         public DateTime? To { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Limit must be positive")]
-        public int? Limit { get; set; }
+        public int Limit { get; set; }
 
         [Range(0, int.MaxValue, ErrorMessage = "Offset must be non-negative")]
-        public int? Offset { get; set; }
+        public int Offset { get; set; }
     }
 }
