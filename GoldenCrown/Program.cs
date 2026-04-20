@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using GoldenCrown.Database;
 using GoldenCrown.Services;
+using GoldenCrown.Middlewares;
 
 namespace GoldenCrown
 {
@@ -36,7 +37,7 @@ namespace GoldenCrown
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseMiddleware<AuthorizationMiddleware>();
 
 
             app.MapControllers();
