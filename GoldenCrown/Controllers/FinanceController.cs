@@ -1,4 +1,5 @@
-﻿using GoldenCrown.DTOs.Finance;
+﻿using GoldenCrown.Attributes;
+using GoldenCrown.DTOs.Finance;
 using GoldenCrown.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
@@ -7,6 +8,7 @@ namespace GoldenCrown.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [MyAuthorize]
     public class FinanceController : Controller
     {
         private readonly IFinanceService _financeService;
