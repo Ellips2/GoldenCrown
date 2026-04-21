@@ -1,6 +1,5 @@
 ﻿using GoldenCrown.Attributes;
 using GoldenCrown.Database;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 namespace GoldenCrown.Middlewares
@@ -8,12 +7,12 @@ namespace GoldenCrown.Middlewares
     public class AuthorizationMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ApplicationDbContext _context;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public AuthorizationMiddleware(RequestDelegate next, ApplicationDbContext context)
+        public AuthorizationMiddleware(RequestDelegate next, IServiceScopeFactory scopeFactory)
         {
             _next = next;
-            _context = context;
+            _scopeFactory = scopeFactory;
         }
 
         public async Task InvokeAsync (HttpContext context)
@@ -25,21 +24,24 @@ namespace GoldenCrown.Middlewares
                 return;
             }
 
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var token = context.Request.Headers[Constants.Authorization].FirstOrDefault()?.Split(" ").Last();
             if (string.IsNullOrEmpty(token))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
             }
 
-            var session = await _context.Sessions.FirstOrDefaultAsync(x => x.Token == token);
+            using var scope = _scopeFactory.CreateScope();
+            var dbConext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            var session = await dbConext.Sessions.FirstOrDefaultAsync(x => x.Token == token);
             if (session == null || session.ExpiresAt < DateTime.UtcNow)
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
             }
 
-            context.Items["UserId"] = session.UserId;
+            context.Items[Constants.UserIdContextParameter] = session.UserId;
             await _next(context);
         }
     }

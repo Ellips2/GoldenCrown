@@ -1,7 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using GoldenCrown.Database;
-using GoldenCrown.Services;
 using GoldenCrown.Middlewares;
+using GoldenCrown.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 
 namespace GoldenCrown
 {
@@ -20,10 +21,28 @@ namespace GoldenCrown
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IFinanceService, FinanceService>();
 
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "ApiKey",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer scheme."
+                });
+
+                options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+                {
+                    [new OpenApiSecuritySchemeReference("ApiKey", document)] = []
+                });
+            });
+
             builder.Services.AddControllers();
-            builder.Services.AddSwaggerGen();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
 
@@ -38,7 +57,6 @@ namespace GoldenCrown
             app.UseHttpsRedirection();
 
             app.UseMiddleware<AuthorizationMiddleware>();
-
 
             app.MapControllers();
 
