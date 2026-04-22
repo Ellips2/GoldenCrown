@@ -7,15 +7,10 @@ namespace GoldenCrown.Middlewares
     public class AuthorizationMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IServiceScopeFactory _scopeFactory;
 
-        public AuthorizationMiddleware(RequestDelegate next, IServiceScopeFactory scopeFactory)
-        {
-            _next = next;
-            _scopeFactory = scopeFactory;
-        }
+        public AuthorizationMiddleware(RequestDelegate next) => _next = next;
 
-        public async Task InvokeAsync (HttpContext context)
+        public async Task InvokeAsync (HttpContext context, ApplicationDbContext dbContext)
         {
             var attribute = context.GetEndpoint()?.Metadata.GetMetadata<MyAuthorizeAttribute>();
             if (attribute == null)
@@ -31,10 +26,7 @@ namespace GoldenCrown.Middlewares
                 return;
             }
 
-            using var scope = _scopeFactory.CreateScope();
-            var dbConext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-            var session = await dbConext.Sessions.FirstOrDefaultAsync(x => x.Token == token);
+            var session = await dbContext.Sessions.FirstOrDefaultAsync(x => x.Token == token);
             if (session == null || session.ExpiresAt < DateTime.UtcNow)
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
