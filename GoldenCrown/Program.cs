@@ -1,4 +1,5 @@
 using GoldenCrown.Database;
+using GoldenCrown.BackgroundServices;
 using GoldenCrown.Middlewares;
 using GoldenCrown.Services;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +44,8 @@ namespace GoldenCrown
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
             builder.Services.AddAuthorization();
+
+            builder.Services.AddHostedService<SessionCleanupService>();
 
             var app = builder.Build();
 
