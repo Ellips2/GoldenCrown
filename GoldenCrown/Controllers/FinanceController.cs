@@ -73,6 +73,7 @@ namespace GoldenCrown.Controllers
 
             return BadRequest(new { Message = historyResult.ErrorMessage });
         }
+
         internal int GetUserId()
         {
             var userId = HttpContext.Items[Constants.UserIdContextParameter] as int?;

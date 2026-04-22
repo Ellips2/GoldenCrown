@@ -1,15 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace GoldenCrown.DTOs.Finance
 {
     public class TransactionHistoryRequest
     {
-        [FromQuery]
-        [Required(ErrorMessage = "Field Token is Required")]
-        public string Token { get; set; }
-
         public DateTime? From { get; set; }
         public DateTime? To { get; set; }
 
