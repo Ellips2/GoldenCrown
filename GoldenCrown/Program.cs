@@ -2,9 +2,8 @@ using FluentValidation;
 using GoldenCrown.BackgroundServices;
 using GoldenCrown.Database;
 using GoldenCrown.DTOs.User;
+using GoldenCrown.Features.User.UserLogin;
 using GoldenCrown.Middlewares;
-using GoldenCrown.Services;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
@@ -21,12 +20,10 @@ namespace GoldenCrown
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found");
 
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionStrnig));
-            builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IAccountService, AccountService>();
-            builder.Services.AddScoped<IFinanceService, FinanceService>();
+
+            builder.Services.AddMediatR(cfg =>cfg.RegisterServicesFromAssembly(typeof(UserLoginCommandHandler).Assembly));
 
             builder.Services.AddValidatorsFromAssemblyContaining<LoginRequest>();
-
 
             builder.Services.AddSwaggerGen(options =>
             {
