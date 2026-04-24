@@ -1,7 +1,10 @@
-using GoldenCrown.Database;
+using FluentValidation;
 using GoldenCrown.BackgroundServices;
+using GoldenCrown.Database;
+using GoldenCrown.DTOs.User;
 using GoldenCrown.Middlewares;
 using GoldenCrown.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
@@ -21,6 +24,9 @@ namespace GoldenCrown
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IFinanceService, FinanceService>();
+
+            builder.Services.AddValidatorsFromAssemblyContaining<LoginRequest>();
+
 
             builder.Services.AddSwaggerGen(options =>
             {
@@ -63,7 +69,16 @@ namespace GoldenCrown
 
             app.MapControllers();
 
+            MigrateDatabase(app);
+
             app.Run();
+        }
+
+        private static void MigrateDatabase(WebApplication app)
+        {
+            using var scope = app.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            db.Database.Migrate();
         }
     }
 }
