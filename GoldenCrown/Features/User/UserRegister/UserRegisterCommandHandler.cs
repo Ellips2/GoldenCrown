@@ -1,4 +1,5 @@
 ﻿using GoldenCrown.Database;
+using GoldenCrown.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,8 +28,15 @@ namespace GoldenCrown.Features.User.UserRegister
                 Name = request.Name,
                 Password = request.Password
             };
-
             _context.Users.Add(user);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var account = new Account
+            {
+                UserId = user.Id,
+                Balance = 0,
+            };
+            _context.Accounts.Add(account);
             await _context.SaveChangesAsync(cancellationToken);
 
             return Result.Success();
