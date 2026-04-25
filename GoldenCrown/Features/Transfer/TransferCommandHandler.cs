@@ -15,7 +15,8 @@ namespace GoldenCrown.Features.Transfer
 
         public async Task<Result> Handle(TransferCommand request, CancellationToken cancellationToken)
         {
-            var fromAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.UserId == request.FromUserId, cancellationToken);
+            var fromAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.UserId == request.FromUserId 
+                    && a.Currency == request.Currency, cancellationToken);
             if (fromAccount == null)
             {
                 return Result.Failure("Sender Account not found");
@@ -27,7 +28,8 @@ namespace GoldenCrown.Features.Transfer
                 return Result.Failure("Receiver User not found");
             }
 
-            var toAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.UserId == toUser.Id, cancellationToken);
+            var toAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.UserId == toUser.Id 
+                    && a.Currency == request.Currency, cancellationToken);
             if (toAccount == null)
             {
                 return Result.Failure("Receiver account not found");
@@ -46,6 +48,7 @@ namespace GoldenCrown.Features.Transfer
                 SenderAccountId = fromAccount.Id,
                 Amount = request.Amount,
                 CreatedAt = DateTime.UtcNow,
+                Currency = request.Currency
             };
             _context.Transactions.Add(transaction);
 

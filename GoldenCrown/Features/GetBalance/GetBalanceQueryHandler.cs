@@ -15,7 +15,8 @@ namespace GoldenCrown.Features.GetBalance
 
         public async Task<Result<decimal>> Handle(GetBalanceQuery request, CancellationToken cancellationToken)
         {
-            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.UserId == request.UserId, cancellationToken);
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.UserId == request.UserId
+                && a.Currency == request.Currency, cancellationToken);
             return account == null
                             ? Result<decimal>.Failure("Account not found")
                             : Result<decimal>.Success(account.Balance);
