@@ -69,7 +69,7 @@ namespace GoldenCrown.API.Controllers
 
 
         [HttpPost("transfer")]
-        public async Task<IActionResult> TransferAsync([FromBody] TransferRequest request, IValidator<TransferRequest> validator)
+        public async Task<IActionResult> TransferAsync([FromBody] TransferRequest request, IValidator<TransferRequest> validator, CancellationToken cancellationToken)
         {
             var validationResult = await validator.ValidateAsync(request);
             if (!validationResult.IsValid)

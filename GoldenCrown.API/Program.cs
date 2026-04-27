@@ -4,6 +4,7 @@ using GoldenCrown.API.Dtos.User;
 using GoldenCrown.API.Middlewares;
 using GoldenCrown.Application.Features.User.UserLogin;
 using GoldenCrown.Infrastructure.Database;
+using GoldenCrown.Infrastructure.RabbitMQ;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
@@ -22,6 +23,9 @@ namespace GoldenCrown.API
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionStrnig));
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(UserLoginCommandHandler).Assembly));
+
+            builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMQ"));
+            builder.Services.AddSingleton<IMessageProducer, RabbitMqMessageProducer>();
 
             builder.Services.AddValidatorsFromAssemblyContaining<LoginRequest>();
             builder.Services.AddAutoMapper(_ => { }, typeof(Program).Assembly);
